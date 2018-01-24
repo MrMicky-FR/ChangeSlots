@@ -1,4 +1,4 @@
-#ChangeSlots
+# ChangeSlots
 
 Light Bukkit and BungeeCord plugin to change the max players on your server !
 
