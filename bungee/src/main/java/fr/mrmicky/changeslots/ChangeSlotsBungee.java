@@ -21,6 +21,7 @@ import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
 public class ChangeSlotsBungee extends Plugin {
 
@@ -96,7 +97,7 @@ public class ChangeSlotsBungee extends Plugin {
 	public class ProxyListener implements Listener {
 
 		@SuppressWarnings("deprecation")
-		@EventHandler(priority = 55)
+		@EventHandler(priority = EventPriority.HIGH)
 		public void onPing(ProxyPingEvent e) {
 			e.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
 		}

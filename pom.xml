@@ -37,6 +37,7 @@
 			</resource>
 		</resources>
 	</build>
+	
 	<modules>
 		<module>bukkit</module>
 		<module>bungee</module>

@@ -12,7 +12,6 @@
 	<artifactId>changeslots-universal</artifactId>
 
 	<name>ChangeSlotsUniversal</name>
-	<url>https://www.spigotmc.org/resources/changeslots.49648/</url>
 
 	<build>
 		<defaultGoal>package</defaultGoal>

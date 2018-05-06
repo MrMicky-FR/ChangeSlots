@@ -12,7 +12,6 @@
 	<artifactId>changeslots-bungee</artifactId>
 
 	<name>ChangeSlotsBungee</name>
-	<url>https://www.spigotmc.org/resources/changeslots.49648/</url>
 
 	<repositories>
 		<repository>
