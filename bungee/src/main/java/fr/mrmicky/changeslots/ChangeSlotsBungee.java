@@ -30,8 +30,10 @@ public class ChangeSlotsBungee extends Plugin {
 	@Override
 	public void onEnable() {
 		loadConfig();
-		getProxy().getPluginManager().registerCommand(this, new CommandSetslots());
-		if (config.getBoolean("UpdateSeverPing")) {
+
+		getProxy().getPluginManager().registerCommand(this, new CommandSetSlots());
+
+		if (config.getBoolean("UpdateServerPing")) {
 			getProxy().getPluginManager().registerListener(this, new ProxyListener());
 		}
 	}
@@ -41,65 +43,69 @@ public class ChangeSlotsBungee extends Plugin {
 			if (!getDataFolder().exists()) {
 				getDataFolder().mkdir();
 			}
+
 			File config = new File(getDataFolder().getPath(), "config.yml");
 			if (!config.exists()) {
 				try {
 					config.createNewFile();
+
 					try (InputStream is = getResourceAsStream("config.yml");
 							OutputStream os = new FileOutputStream(config)) {
 						ByteStreams.copy(is, os);
 					}
-				} catch (IOException e) {
-					throw new RuntimeException("Unable to create configuration file", e);
+				} catch (IOException exception) {
+					throw new RuntimeException("Unable to create configuration file", exception);
 				}
 			}
+
 			this.config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config);
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException exception) {
+			exception.printStackTrace();
 		}
 	}
 
 	public void changeSlots(int slots) throws ReflectiveOperationException {
-		Field playerLimit = getProxy().getConfig().getClass().getDeclaredField("playerLimit");
-		playerLimit.setAccessible(true);
-		playerLimit.set(getProxy().getConfig(), slots);
+		Field playerLimitField = getProxy().getConfig().getClass().getDeclaredField("playerLimit");
+		playerLimitField.setAccessible(true);
+		playerLimitField.set(getProxy().getConfig(), slots);
 	}
 
 	private BaseComponent[] getConfigString(String key) {
 		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', config.getString(key)));
 	}
 
-	class CommandSetslots extends Command {
+	class CommandSetSlots extends Command {
 
-		public CommandSetslots() {
+		public CommandSetSlots() {
 			super("setslots", "changeslots.admin", new String[] { "setslot", "changeslots" });
 		}
 
 		@Override
 		public void execute(CommandSender sender, String[] args) {
-			if (args.length == 1) {
-				try {
-					changeSlots(Integer.valueOf(args[0]));
-					sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
-							config.getString("Success").replace("%n", args[0]))));
-				} catch (NumberFormatException e1) {
-					sender.sendMessage(getConfigString("NoNumber"));
-				} catch (Exception e2) {
-					sender.sendMessage(getConfigString("Error"));
-					e2.printStackTrace();
-				}
-			} else {
+			if (args.length < 1) {
 				sender.sendMessage(getConfigString("NoArgument"));
+				return;
+			}
+
+			try {
+				changeSlots(Integer.valueOf(args[0]));
+
+				sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+						config.getString("Success").replace("%n", args[0]))));
+			} catch (NumberFormatException numberFormatException) {
+				sender.sendMessage(getConfigString("NoNumber"));
+			} catch (ReflectiveOperationException fieldException) {
+				sender.sendMessage(getConfigString("Error"));
+				fieldException.printStackTrace();
 			}
 		}
 	}
 
 	public class ProxyListener implements Listener {
 
-		@SuppressWarnings("deprecation")
 		@EventHandler(priority = EventPriority.HIGH)
-		public void onPing(ProxyPingEvent e) {
-			e.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
+		public void onPing(ProxyPingEvent event) {
+			event.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
 		}
 	}
 }
