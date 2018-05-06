@@ -41,9 +41,9 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 	}
 
 	public void changeSlots(int slots) throws ReflectiveOperationException {
-		Object playerlist = getServer().getClass().getDeclaredMethod("getHandle").invoke(getServer());
-		Field maxPlayers = playerlist.getClass().getSuperclass().getDeclaredField("maxPlayers");
+		Object playerList = getServer().getClass().getDeclaredMethod("getHandle").invoke(getServer());
+		Field maxPlayers = playerList.getClass().getSuperclass().getDeclaredField("maxPlayers");
 		maxPlayers.setAccessible(true);
-		maxPlayers.set(playerlist, slots);
+		maxPlayers.set(playerList, slots);
 	}
 }
