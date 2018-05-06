@@ -96,7 +96,6 @@ public class ChangeSlotsBungee extends Plugin {
 
 	public class ProxyListener implements Listener {
 
-		@SuppressWarnings("deprecation")
 		@EventHandler(priority = EventPriority.HIGH)
 		public void onPing(ProxyPingEvent e) {
 			e.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
