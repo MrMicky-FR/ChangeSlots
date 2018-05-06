@@ -77,7 +77,7 @@ public class ChangeSlotsBungee extends Plugin {
 	class CommandSetSlots extends Command {
 
 		public CommandSetSlots() {
-			super("setslots", "changeslots.admin", new String[] { "setslot", "changeslots" });
+			super("setslots", "changeslots.admin", "setslot", "changeslots");
 		}
 
 		@Override

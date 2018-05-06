@@ -18,11 +18,12 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) {
 		if (!sender.hasPermission("changeslots.admin")) {
 			sender.sendMessage(getConfigString("NoPermission"));
+			return true;
 		}
 
 		if (args.length < 1) {
 			sender.sendMessage(getConfigString("NoArgument"));
-			return false;
+			return true;
 		}
 
 		try {
@@ -35,7 +36,6 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 			sender.sendMessage(getConfigString("Error"));
 			fieldException.printStackTrace();
 		}
-
 		return true;
 	}
 
