@@ -30,8 +30,8 @@ public class ChangeSlotsBungee extends Plugin {
 	@Override
 	public void onEnable() {
 		loadConfig();
-		getProxy().getPluginManager().registerCommand(this, new CommandSetslots());
-		if (config.getBoolean("UpdateSeverPing")) {
+		getProxy().getPluginManager().registerCommand(this, new CommandSetSlots());
+		if (config.getBoolean("UpdateServerPing")) {
 			getProxy().getPluginManager().registerListener(this, new ProxyListener());
 		}
 	}
@@ -69,9 +69,9 @@ public class ChangeSlotsBungee extends Plugin {
 		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', config.getString(key)));
 	}
 
-	class CommandSetslots extends Command {
+	class CommandSetSlots extends Command {
 
-		public CommandSetslots() {
+		public CommandSetSlots() {
 			super("setslots", "changeslots.admin", new String[] { "setslot", "changeslots" });
 		}
 

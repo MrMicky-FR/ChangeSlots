@@ -9,4 +9,4 @@ Error: '&cAn error occured, please check the console '
 NoPermission: '&cYou don''t have access to that command'
 
 #BungeeCord only: Does the plugin will display real max players when you ping the server on server list ?
-UpdateSeverPing: true
+UpdateServerPing: true
