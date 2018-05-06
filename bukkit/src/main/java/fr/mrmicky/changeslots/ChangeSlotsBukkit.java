@@ -16,23 +16,26 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) {
-		if (sender.hasPermission("changeslots.admin")) {
-			if (args.length == 1) {
-				try {
-					changeSlots(Integer.valueOf(args[0]));
-					sender.sendMessage(getConfigString("Success").replace("%n", args[0]));
-				} catch (NumberFormatException e) {
-					sender.sendMessage(getConfigString("NoNumber"));
-				} catch (Exception e) {
-					sender.sendMessage(getConfigString("Error"));
-					e.printStackTrace();
-				}
-			} else {
-				sender.sendMessage(getConfigString("NoArgument"));
-			}
-		} else {
+		if (!sender.hasPermission("changeslots.admin")) {
 			sender.sendMessage(getConfigString("NoPermission"));
 		}
+
+		if (args.length < 1) {
+			sender.sendMessage(getConfigString("NoArgument"));
+			return false;
+		}
+
+		try {
+			changeSlots(Integer.valueOf(args[0]));
+
+			sender.sendMessage(getConfigString("Success").replace("%n", args[0]));
+		} catch (NumberFormatException numberFormatException) {
+			sender.sendMessage(getConfigString("NoNumber"));
+		} catch (ReflectiveOperationException fieldException) {
+			sender.sendMessage(getConfigString("Error"));
+			fieldException.printStackTrace();
+		}
+
 		return true;
 	}
 
@@ -42,8 +45,8 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 
 	public void changeSlots(int slots) throws ReflectiveOperationException {
 		Object playerList = getServer().getClass().getDeclaredMethod("getHandle").invoke(getServer());
-		Field maxPlayers = playerList.getClass().getSuperclass().getDeclaredField("maxPlayers");
-		maxPlayers.setAccessible(true);
-		maxPlayers.set(playerList, slots);
+		Field maxPlayersField = playerList.getClass().getSuperclass().getDeclaredField("maxPlayers");
+		maxPlayersField.setAccessible(true);
+		maxPlayersField.set(playerList, slots);
 	}
 }

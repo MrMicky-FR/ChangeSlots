@@ -48,6 +48,7 @@ public class ChangeSlotsBungee extends Plugin {
 			if (!config.exists()) {
 				try {
 					config.createNewFile();
+
 					try (InputStream is = getResourceAsStream("config.yml");
 							OutputStream os = new FileOutputStream(config)) {
 						ByteStreams.copy(is, os);
@@ -81,19 +82,20 @@ public class ChangeSlotsBungee extends Plugin {
 
 		@Override
 		public void execute(CommandSender sender, String[] args) {
-			if (args.length == 1) {
-				try {
-					changeSlots(Integer.valueOf(args[0]));
-					sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
-							config.getString("Success").replace("%n", args[0]))));
-				} catch (NumberFormatException numberFormatException) {
-					sender.sendMessage(getConfigString("NoNumber"));
-				} catch (Exception e2) {
-					sender.sendMessage(getConfigString("Error"));
-					e2.printStackTrace();
-				}
-			} else {
+			if (args.length < 1) {
 				sender.sendMessage(getConfigString("NoArgument"));
+				return;
+			}
+
+			try {
+				changeSlots(Integer.valueOf(args[0]));
+				sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
+						config.getString("Success").replace("%n", args[0]))));
+			} catch (NumberFormatException numberFormatException) {
+				sender.sendMessage(getConfigString("NoNumber"));
+			} catch (ReflectiveOperationException fieldException) {
+				sender.sendMessage(getConfigString("Error"));
+				fieldException.printStackTrace();
 			}
 		}
 	}
@@ -101,8 +103,8 @@ public class ChangeSlotsBungee extends Plugin {
 	public class ProxyListener implements Listener {
 
 		@EventHandler(priority = EventPriority.HIGH)
-		public void onPing(ProxyPingEvent e) {
-			e.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
+		public void onPing(ProxyPingEvent event) {
+			event.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
 		}
 	}
 }
