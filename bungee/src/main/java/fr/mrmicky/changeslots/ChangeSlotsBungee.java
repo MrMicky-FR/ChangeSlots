@@ -89,6 +89,7 @@ public class ChangeSlotsBungee extends Plugin {
 
 			try {
 				changeSlots(Integer.valueOf(args[0]));
+
 				sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
 						config.getString("Success").replace("%n", args[0]))));
 			} catch (NumberFormatException numberFormatException) {
