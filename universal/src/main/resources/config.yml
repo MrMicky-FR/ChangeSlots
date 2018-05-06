@@ -1,12 +1,12 @@
-Success: '&6The max slots is now to &c%n'
+Success: "&6The max slots is now to &c%n."
 
-NoArgument: '&cPlease indicate a number'
+NoArgument: "&cPlease indicate a number."
 
-NoNumber: '&cPlease put a valid number'
+NoNumber: "&cPlease put a valid number."
 
-Error: '&cAn error occured, please check the console '
+Error: "&cAn error occurred, please check the console!"
 
-NoPermission: '&cYou don''t have access to that command'
+NoPermission: "&cYou don't have access to that command!"
 
-#BungeeCord only: Does the plugin will display real max players when you ping the server on server list ?
+# BungeeCord only: Does the plugin display real max players when you ping the server on server list?
 UpdateServerPing: true
