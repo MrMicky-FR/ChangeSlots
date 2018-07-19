@@ -27,7 +27,7 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 		}
 
 		try {
-			changeSlots(Integer.valueOf(args[0]));
+			changeSlots(Integer.parseInt(args[0]));
 
 			sender.sendMessage(getConfigString("Success").replace("%n", args[0]));
 		} catch (NumberFormatException numberFormatException) {

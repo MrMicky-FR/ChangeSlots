@@ -23,7 +23,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
-public class ChangeSlotsBungee extends Plugin {
+public class ChangeSlotsBungee extends Plugin implements Listener {
 
 	private Configuration config;
 
@@ -34,7 +34,7 @@ public class ChangeSlotsBungee extends Plugin {
 		getProxy().getPluginManager().registerCommand(this, new CommandSetSlots());
 
 		if (config.getBoolean("UpdateServerPing")) {
-			getProxy().getPluginManager().registerListener(this, new ProxyListener());
+			getProxy().getPluginManager().registerListener(this, this);
 		}
 	}
 
@@ -74,6 +74,11 @@ public class ChangeSlotsBungee extends Plugin {
 		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', config.getString(key)));
 	}
 
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onPing(ProxyPingEvent event) {
+		event.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
+	}
+
 	class CommandSetSlots extends Command {
 
 		public CommandSetSlots() {
@@ -88,7 +93,7 @@ public class ChangeSlotsBungee extends Plugin {
 			}
 
 			try {
-				changeSlots(Integer.valueOf(args[0]));
+				changeSlots(Integer.parseInt(args[0]));
 
 				sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
 						config.getString("Success").replace("%n", args[0]))));
@@ -98,14 +103,6 @@ public class ChangeSlotsBungee extends Plugin {
 				sender.sendMessage(getConfigString("Error"));
 				fieldException.printStackTrace();
 			}
-		}
-	}
-
-	public class ProxyListener implements Listener {
-
-		@EventHandler(priority = EventPriority.HIGH)
-		public void onPing(ProxyPingEvent event) {
-			event.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
 		}
 	}
 }
