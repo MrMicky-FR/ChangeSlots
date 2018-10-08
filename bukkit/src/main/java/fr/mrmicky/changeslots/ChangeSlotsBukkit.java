@@ -1,6 +1,9 @@
 package fr.mrmicky.changeslots;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,7 +18,7 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String arg, String[] args) {
+	public boolean onCommand(CommandSender sender, Command command, String alias, String[] args) {
 		if (!sender.hasPermission("changeslots.admin")) {
 			sender.sendMessage(getConfigString("NoPermission"));
 			return true;
@@ -30,13 +33,18 @@ public class ChangeSlotsBukkit extends JavaPlugin {
 			changeSlots(Integer.parseInt(args[0]));
 
 			sender.sendMessage(getConfigString("Success").replace("%n", args[0]));
-		} catch (NumberFormatException numberFormatException) {
+		} catch (NumberFormatException e) {
 			sender.sendMessage(getConfigString("NoNumber"));
-		} catch (ReflectiveOperationException fieldException) {
+		} catch (ReflectiveOperationException e) {
 			sender.sendMessage(getConfigString("Error"));
-			fieldException.printStackTrace();
+			getLogger().log(Level.SEVERE, "An error occurred while change slots", e);
 		}
 		return true;
+	}
+
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+		return Collections.emptyList();
 	}
 
 	private String getConfigString(String key) {

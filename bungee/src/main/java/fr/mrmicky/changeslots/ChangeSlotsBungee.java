@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.logging.Level;
 
 import com.google.common.io.ByteStreams;
 
@@ -59,8 +60,8 @@ public class ChangeSlotsBungee extends Plugin implements Listener {
 			}
 
 			this.config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(config);
-		} catch (IOException exception) {
-			exception.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -71,7 +72,11 @@ public class ChangeSlotsBungee extends Plugin implements Listener {
 	}
 
 	private BaseComponent[] getConfigString(String key) {
-		return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', config.getString(key)));
+		return TextComponent.fromLegacyText(color(config.getString(key)));
+	}
+
+	private String color(String s) {
+		return ChatColor.translateAlternateColorCodes('&', s);
 	}
 
 	@EventHandler(priority = EventPriority.HIGH)
@@ -95,13 +100,12 @@ public class ChangeSlotsBungee extends Plugin implements Listener {
 			try {
 				changeSlots(Integer.parseInt(args[0]));
 
-				sender.sendMessage(TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&',
-						config.getString("Success").replace("%n", args[0]))));
-			} catch (NumberFormatException numberFormatException) {
+				sender.sendMessage(TextComponent.fromLegacyText(color(config.getString("Success").replace("%n", args[0]))));
+			} catch (NumberFormatException e) {
 				sender.sendMessage(getConfigString("NoNumber"));
-			} catch (ReflectiveOperationException fieldException) {
+			} catch (ReflectiveOperationException e) {
 				sender.sendMessage(getConfigString("Error"));
-				fieldException.printStackTrace();
+				getLogger().log(Level.SEVERE, "An error occurred while change slots", e);
 			}
 		}
 	}
