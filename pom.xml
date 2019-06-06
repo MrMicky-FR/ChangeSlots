@@ -11,6 +11,12 @@
 
     <name>ChangeSlots</name>
 
+    <modules>
+        <module>bukkit</module>
+        <module>bungee</module>
+        <module>universal</module>
+    </modules>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
@@ -35,9 +41,4 @@
         </resources>
     </build>
 
-    <modules>
-        <module>bukkit</module>
-        <module>bungee</module>
-        <module>universal</module>
-    </modules>
 </project>

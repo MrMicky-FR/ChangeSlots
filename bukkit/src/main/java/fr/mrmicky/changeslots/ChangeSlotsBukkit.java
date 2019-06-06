@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 
-public class ChangeSlotsBukkit extends JavaPlugin {
+public final class ChangeSlotsBukkit extends JavaPlugin {
 
     @Override
     public void onEnable() {

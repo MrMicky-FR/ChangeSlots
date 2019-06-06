@@ -20,7 +20,7 @@ import java.lang.reflect.Field;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 
-public class ChangeSlotsBungee extends Plugin implements Listener {
+public final class ChangeSlotsBungee extends Plugin implements Listener {
 
     private Configuration config;
 
@@ -78,7 +78,7 @@ public class ChangeSlotsBungee extends Plugin implements Listener {
     class CommandSetSlots extends Command {
 
         public CommandSetSlots() {
-            super("setslots", "changeslots.admin", "setslot", "changeslots");
+            super("setslots", "changeslots.admin", "setslot", "changeslots", "gsetslots");
         }
 
         @Override
