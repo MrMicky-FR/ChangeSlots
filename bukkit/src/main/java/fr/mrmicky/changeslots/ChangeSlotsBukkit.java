@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,8 +53,11 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
     }
 
     public void changeSlots(int slots) throws ReflectiveOperationException {
-        Object playerList = getServer().getClass().getDeclaredMethod("getHandle").invoke(getServer());
+        Method serverGetHandle = getServer().getClass().getDeclaredMethod("getHandle");
+
+        Object playerList = serverGetHandle.invoke(getServer());
         Field maxPlayersField = playerList.getClass().getSuperclass().getDeclaredField("maxPlayers");
+
         maxPlayersField.setAccessible(true);
         maxPlayersField.set(playerList, slots);
     }

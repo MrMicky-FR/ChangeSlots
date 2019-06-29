@@ -15,7 +15,11 @@ import net.md_5.bungee.config.YamlConfiguration;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
@@ -56,7 +60,13 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
     }
 
     public void changeSlots(int slots) throws ReflectiveOperationException {
-        Field playerLimitField = getProxy().getConfig().getClass().getDeclaredField("playerLimit");
+        Class<?> configClass = getProxy().getConfig().getClass();
+
+        if (!configClass.getSuperclass().equals(Object.class)) {
+             configClass = configClass.getSuperclass();
+        }
+
+        Field playerLimitField = configClass.getDeclaredField("playerLimit");
         playerLimitField.setAccessible(true);
         playerLimitField.set(getProxy().getConfig(), slots);
     }
