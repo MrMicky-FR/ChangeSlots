@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 
@@ -55,20 +56,26 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
 
             config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to create configuration file", e);
+            throw new RuntimeException("Unable to load configuration", e);
         }
     }
 
-    public void changeSlots(int slots) throws ReflectiveOperationException {
+    private void changeSlots(int slots) throws ReflectiveOperationException {
         Class<?> configClass = getProxy().getConfig().getClass();
 
         if (!configClass.getSuperclass().equals(Object.class)) {
-             configClass = configClass.getSuperclass();
+            configClass = configClass.getSuperclass();
         }
 
         Field playerLimitField = configClass.getDeclaredField("playerLimit");
         playerLimitField.setAccessible(true);
         playerLimitField.set(getProxy().getConfig(), slots);
+    }
+
+    private void updateBungeeConfig(int slots) throws ReflectiveOperationException {
+        Method setMethod = getProxy().getConfigurationAdapter().getClass().getDeclaredMethod("set", String.class, Object.class);
+        setMethod.setAccessible(true);
+        setMethod.invoke(getProxy().getConfigurationAdapter(), "player_limit", slots);
     }
 
     private BaseComponent[] getConfigString(String key) {
@@ -81,8 +88,8 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH)
-    public void onPing(ProxyPingEvent event) {
-        event.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
+    public void onProxyPing(ProxyPingEvent e) {
+        e.getResponse().getPlayers().setMax(getProxy().getConfig().getPlayerLimit());
     }
 
     class CommandSetSlots extends Command {
@@ -99,14 +106,21 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
             }
 
             try {
-                changeSlots(Integer.parseInt(args[0]));
+                int slots = Integer.parseInt(args[0]);
+
+                changeSlots(slots);
+
+                if (config.getBoolean("SaveOnRestart")) {
+                    updateBungeeConfig(slots);
+                }
 
                 sender.sendMessage(getConfigString("Success", s -> s.replace("%n", args[0])));
             } catch (NumberFormatException e) {
                 sender.sendMessage(getConfigString("NoNumber"));
             } catch (ReflectiveOperationException e) {
                 sender.sendMessage(getConfigString("Error"));
-                getLogger().log(Level.SEVERE, "An error occurred", e);
+
+                getLogger().log(Level.SEVERE, "An error occurred while updating max players", e);
             }
         }
     }
