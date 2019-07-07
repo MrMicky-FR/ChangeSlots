@@ -1,9 +1,10 @@
-package fr.mrmicky.changeslots;
+package fr.mrmicky.changeslots.bungee;
 
 import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Command;
@@ -78,12 +79,13 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
         setMethod.invoke(getProxy().getConfigurationAdapter(), "player_limit", slots);
     }
 
-    private BaseComponent[] getConfigString(String key) {
-        return getConfigString(key, null);
+    private BaseComponent[] getMessage(String key) {
+        return getMessage(key, null);
     }
 
-    private BaseComponent[] getConfigString(String key, UnaryOperator<String> operator) {
+    private BaseComponent[] getMessage(String key, UnaryOperator<String> operator) {
         String s = ChatColor.translateAlternateColorCodes('&', config.getString(key));
+
         return TextComponent.fromLegacyText(operator != null ? operator.apply(s) : s);
     }
 
@@ -95,13 +97,13 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
     class CommandSetSlots extends Command {
 
         public CommandSetSlots() {
-            super("setslots", "changeslots.admin", "setslot", "changeslots", "gsetslots");
+            super("gsetslots", "changeslots.admin", "gchangeslots");
         }
 
         @Override
         public void execute(CommandSender sender, String[] args) {
             if (args.length == 0) {
-                sender.sendMessage(getConfigString("NoArgument"));
+                sender.sendMessage(new ComponentBuilder("Usage: /setslots <slots>").color(ChatColor.RED).create());
                 return;
             }
 
@@ -114,11 +116,11 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
                     updateBungeeConfig(slots);
                 }
 
-                sender.sendMessage(getConfigString("Success", s -> s.replace("%n", args[0])));
+                sender.sendMessage(getMessage("Success", s -> s.replace("%n", args[0])));
             } catch (NumberFormatException e) {
-                sender.sendMessage(getConfigString("NoNumber"));
+                sender.sendMessage(getMessage("NoNumber"));
             } catch (ReflectiveOperationException e) {
-                sender.sendMessage(getConfigString("Error"));
+                sender.sendMessage(getMessage("Error"));
 
                 getLogger().log(Level.SEVERE, "An error occurred while updating max players", e);
             }

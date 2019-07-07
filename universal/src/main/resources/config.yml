@@ -1,12 +1,10 @@
 Success: "&6The max players is now to &c%n."
 
-NoArgument: "&cPlease indicate a number."
+NoNumber: "&cPlease specify a valid number."
 
-NoNumber: "&cPlease put a valid number."
+Error: "&cAn error occurred while changing max players"
 
-Error: "&cAn error occurred, please check the console!"
-
-NoPermission: "&cYou don't have access to that command!"
+NoPermission: "&cYou don't have the permission to use this command"
 
 # If true, the server.properties (on Bukkit/Spigot) or the config.yml (on Bungee) will be update
 # And the new slots will be keep after the restart

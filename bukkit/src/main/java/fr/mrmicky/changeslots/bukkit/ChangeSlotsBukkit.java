@@ -1,4 +1,4 @@
-package fr.mrmicky.changeslots;
+package fr.mrmicky.changeslots.bukkit;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -35,23 +35,23 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("changeslots.admin")) {
-            sender.sendMessage(getConfigString("NoPermission"));
+            sender.sendMessage(getMessage("NoPermission"));
             return true;
         }
 
         if (args.length == 0) {
-            sender.sendMessage(getConfigString("NoArgument"));
+            sender.sendMessage(ChatColor.RED + "Usage: /setslots <slots>");
             return true;
         }
 
         try {
             changeSlots(Integer.parseInt(args[0]));
 
-            sender.sendMessage(getConfigString("Success").replace("%n", args[0]));
+            sender.sendMessage(getMessage("Success").replace("%n", args[0]));
         } catch (NumberFormatException e) {
-            sender.sendMessage(getConfigString("NoNumber"));
+            sender.sendMessage(getMessage("NoNumber"));
         } catch (ReflectiveOperationException e) {
-            sender.sendMessage(getConfigString("Error"));
+            sender.sendMessage(getMessage("Error"));
 
             getLogger().log(Level.SEVERE, "An error occurred while updating max players", e);
         }
@@ -64,7 +64,7 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
         return Collections.emptyList();
     }
 
-    private String getConfigString(String key) {
+    private String getMessage(String key) {
         return ChatColor.translateAlternateColorCodes('&', getConfig().getString(key));
     }
 
@@ -100,7 +100,7 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
                 properties.store(os, "Minecraft server properties");
             }
         } catch (IOException e) {
-            getLogger().log(Level.SEVERE, "Error while saving max players in server properties", e);
+            getLogger().log(Level.SEVERE, "An error occurred while updating the server properties", e);
         }
     }
 }

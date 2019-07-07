@@ -1,12 +1,12 @@
 name: ChangeSlots
 version: ${project.version}
 author: MrMicky
-description: Simple Bukkit and BungeeCord plugin to change the max players on your server without restart.
+description: Simple plugin to change the max players on your server without restart.
 website: https://www.spigotmc.org/resources/changeslots.49648/
 api-version: 1.13
-main: fr.mrmicky.changeslots.ChangeSlotsBukkit
+main: fr.mrmicky.changeslots.bukkit.ChangeSlotsBukkit
 commands:
   setslots:
     description: Change the max players on the server
     usage: /<command> <slots>
-    aliases: [setslot, changeslots]
+    aliases: [changeslots]
