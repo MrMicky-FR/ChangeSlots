@@ -7,25 +7,18 @@
     <parent>
         <groupId>fr.mrmicky</groupId>
         <artifactId>changeslots</artifactId>
-        <version>2.3.0</version>
+        <version>2.4.0</version>
     </parent>
 
     <artifactId>changeslots-bungee</artifactId>
 
     <name>ChangeSlotsBungee</name>
 
-    <repositories>
-        <repository>
-            <id>bungeecord-repo</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.13-SNAPSHOT</version>
+            <version>1.16-R0.4</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

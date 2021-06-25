@@ -1,5 +1,6 @@
 package fr.mrmicky.changeslots.bukkit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -19,6 +20,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 public final class ChangeSlotsBukkit extends JavaPlugin {
+
+    private Field maxPlayersField;
 
     @Override
     public void onEnable() {
@@ -70,12 +73,37 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
 
     private void changeSlots(int slots) throws ReflectiveOperationException {
         Method serverGetHandle = getServer().getClass().getDeclaredMethod("getHandle");
-
         Object playerList = serverGetHandle.invoke(getServer());
-        Field maxPlayersField = playerList.getClass().getSuperclass().getDeclaredField("maxPlayers");
 
-        maxPlayersField.setAccessible(true);
-        maxPlayersField.set(playerList, slots);
+        if (this.maxPlayersField == null) {
+            this.maxPlayersField = getMaxPlayersField(playerList);
+        }
+
+        this.maxPlayersField.setInt(playerList, slots);
+    }
+
+    private Field getMaxPlayersField(Object playerList) throws ReflectiveOperationException {
+        Class<?> playerListClass = playerList.getClass().getSuperclass();
+
+        try {
+            Field field = playerListClass.getDeclaredField("maxPlayers");
+            field.setAccessible(true);
+            return field;
+        } catch (NoSuchFieldException e) {
+            for (Field field : playerListClass.getDeclaredFields()) {
+                if (field.getType() != int.class) {
+                    continue;
+                }
+
+                field.setAccessible(true);
+
+                if (field.getInt(playerList) == Bukkit.getMaxPlayers()) {
+                    return field;
+                }
+            }
+
+            throw new NoSuchFieldException("Unable to find maxPlayers field in " + playerListClass.getName());
+        }
     }
 
     private void updateServerProperties() {

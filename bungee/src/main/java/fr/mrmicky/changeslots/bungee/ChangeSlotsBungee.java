@@ -1,6 +1,5 @@
 package fr.mrmicky.changeslots.bungee;
 
-import com.google.common.io.ByteStreams;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -17,12 +16,11 @@ import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
 import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 
@@ -36,7 +34,7 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
 
         getProxy().getPluginManager().registerCommand(this, new CommandSetSlots());
 
-        if (config.getBoolean("UpdateServerPing")) {
+        if (this.config.getBoolean("UpdateServerPing")) {
             getProxy().getPluginManager().registerListener(this, this);
         }
     }
@@ -48,14 +46,14 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
             }
 
             File configFile = new File(getDataFolder(), "config.yml");
+
             if (!configFile.exists()) {
-                try (InputStream is = getResourceAsStream("config.yml");
-                     OutputStream os = new FileOutputStream(configFile)) {
-                    ByteStreams.copy(is, os);
+                try (InputStream in = getResourceAsStream("config.yml")) {
+                    Files.copy(in, configFile.toPath());
                 }
             }
 
-            config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
+            this.config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(configFile);
         } catch (IOException e) {
             throw new RuntimeException("Unable to load configuration", e);
         }
@@ -70,7 +68,7 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
 
         Field playerLimitField = configClass.getDeclaredField("playerLimit");
         playerLimitField.setAccessible(true);
-        playerLimitField.set(getProxy().getConfig(), slots);
+        playerLimitField.setInt(getProxy().getConfig(), slots);
     }
 
     private void updateBungeeConfig(int slots) throws ReflectiveOperationException {
@@ -84,7 +82,7 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
     }
 
     private BaseComponent[] getMessage(String key, UnaryOperator<String> operator) {
-        String s = ChatColor.translateAlternateColorCodes('&', config.getString(key));
+        String s = ChatColor.translateAlternateColorCodes('&', this.config.getString(key));
 
         return TextComponent.fromLegacyText(operator != null ? operator.apply(s) : s);
     }
