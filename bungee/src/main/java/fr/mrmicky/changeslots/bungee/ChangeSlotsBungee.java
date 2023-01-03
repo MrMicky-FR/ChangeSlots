@@ -60,9 +60,10 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
     }
 
     /**
-     * Changes the max players of the BungeeCord server
-     * @param slots
-     * @throws ReflectiveOperationException
+     * Change the max players of the BungeeCord server.
+     *
+     * @param slots the amount of players the proxy should allow
+     * @throws ReflectiveOperationException if an error occurs
      */
     public void changeSlots(int slots) throws ReflectiveOperationException {
         Class<?> configClass = getProxy().getConfig().getClass();

@@ -1,6 +1,5 @@
 package fr.mrmicky.changeslots.bukkit;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -72,11 +71,11 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
     }
 
     /**
-     * Change the max players of the Bukkit server
-     * @param slots
-     * @throws ReflectiveOperationException
+     * Change the max players of the Bukkit server.
+     *
+     * @param slots the amount of players the server should allow
+     * @throws ReflectiveOperationException if an error occurs
      */
-
     public void changeSlots(int slots) throws ReflectiveOperationException {
         Method serverGetHandle = getServer().getClass().getDeclaredMethod("getHandle");
         Object playerList = serverGetHandle.invoke(getServer());
@@ -103,7 +102,7 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
 
                 field.setAccessible(true);
 
-                if (field.getInt(playerList) == Bukkit.getMaxPlayers()) {
+                if (field.getInt(playerList) == getServer().getMaxPlayers()) {
                     return field;
                 }
             }
