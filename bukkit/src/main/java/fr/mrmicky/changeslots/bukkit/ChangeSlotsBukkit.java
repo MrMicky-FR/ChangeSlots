@@ -71,7 +71,13 @@ public final class ChangeSlotsBukkit extends JavaPlugin {
         return ChatColor.translateAlternateColorCodes('&', getConfig().getString(key));
     }
 
-    private void changeSlots(int slots) throws ReflectiveOperationException {
+    /**
+     * Change the max players of the Bukkit server
+     * @param slots
+     * @throws ReflectiveOperationException
+     */
+
+    public void changeSlots(int slots) throws ReflectiveOperationException {
         Method serverGetHandle = getServer().getClass().getDeclaredMethod("getHandle");
         Object playerList = serverGetHandle.invoke(getServer());
 

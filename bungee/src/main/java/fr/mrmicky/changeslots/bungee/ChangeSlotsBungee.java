@@ -59,7 +59,12 @@ public final class ChangeSlotsBungee extends Plugin implements Listener {
         }
     }
 
-    private void changeSlots(int slots) throws ReflectiveOperationException {
+    /**
+     * Changes the max players of the BungeeCord server
+     * @param slots
+     * @throws ReflectiveOperationException
+     */
+    public void changeSlots(int slots) throws ReflectiveOperationException {
         Class<?> configClass = getProxy().getConfig().getClass();
 
         if (!configClass.getSuperclass().equals(Object.class)) {
